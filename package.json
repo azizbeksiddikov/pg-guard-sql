@@ -27,6 +27,7 @@
     "test:unit": "vitest run test/validate.test.ts test/policy.test.ts",
     "mcp": "tsx src/mcp/cli.ts",
     "attacks": "tsx scripts/attack-report.ts",
+    "smoke": "npm run build && tsx scripts/smoke-stdio.ts",
     "demo:up": "docker compose -f demo/docker-compose.yml up -d --wait",
     "demo": "tsx demo/run-demo.ts",
     "demo:down": "docker compose -f demo/docker-compose.yml down -v"

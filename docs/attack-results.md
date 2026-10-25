@@ -12,7 +12,7 @@ A result is a **leak** if it contains any secret marker (Bob's rows, password ha
 Without the validator, these got through the database layers, which is why the parser allowlist exists:
 
 - #5 Switch RLS user, then read: **LEAK** (26 rows incl. foreign data)
-- #7 Disable timeout, then sleep: **SLOW** (6017 ms)
+- #7 Disable timeout, then sleep: **SLOW** (6020 ms)
 - #55 SECURITY DEFINER function in FROM: **LEAK** (2 rows incl. foreign data)
 - #56 SECURITY DEFINER function in SELECT list: **LEAK** (2 rows incl. foreign data)
 
@@ -42,7 +42,7 @@ Without the validator, these got through the database layers, which is why the p
 | 4 | stacked | Stacked DROP after a line comment | `SELECT * FROM products -- harmless\n; DROP TABLE orders` | ✅ blocked: MULTIPLE_STATEMENTS | ✅ stopped: cannot execute DROP TABLE in a read-only transaction |
 | 5 | stacked | Switch RLS user, then read | `SELECT set_config('app.user_id', 'bob', false); SELECT * FROM v_orders` | ✅ blocked: MULTIPLE_STATEMENTS | ❌ LEAK: 26 rows incl. foreign data |
 | 6 | stacked | RESET ROLE, then read users | `RESET ROLE; SELECT * FROM users` | ✅ blocked: MULTIPLE_STATEMENTS | ✅ stopped: permission denied for table users |
-| 7 | stacked | Disable timeout, then sleep | `SET LOCAL statement_timeout = 0; SELECT pg_sleep(6)` | ✅ blocked: MULTIPLE_STATEMENTS | ❌ SLOW: 6017 ms |
+| 7 | stacked | Disable timeout, then sleep | `SET LOCAL statement_timeout = 0; SELECT pg_sleep(6)` | ✅ blocked: MULTIPLE_STATEMENTS | ❌ SLOW: 6020 ms |
 | 8 | write | DELETE Bob's orders | `DELETE FROM orders WHERE user_id = 'bob'` | ✅ blocked: NOT_SELECT | ✅ stopped: cannot execute DELETE in a read-only transaction |
 | 9 | write | UPDATE all totals | `UPDATE orders SET total = 0` | ✅ blocked: NOT_SELECT | ✅ stopped: cannot execute UPDATE in a read-only transaction |
 | 10 | write | INSERT a fake order | `INSERT INTO orders (user_id, product_id, quantity, total) VALUES ('bob', 1, 1, 1)` | ✅ blocked: NOT_SELECT | ✅ stopped: cannot execute INSERT in a read-only transaction |
