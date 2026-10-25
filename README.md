@@ -280,7 +280,7 @@ SKIP_DB_TESTS=1 npm test       # pure tests only, no Docker
 npm run attacks                # regenerate docs/attack-results.md
 ```
 
-The tests start one `postgres:17-alpine` container per run through testcontainers. To reuse an existing database with the demo schema instead, set `PG_GUARD_TEST_ADMIN_URL` (owner) and `PG_GUARD_TEST_APP_URL` (the `pgguard_app` login). CI runs typecheck, build and the full test suite on Node 20 and 22.
+The tests start one `postgres:17-alpine` container per run through testcontainers. To reuse an existing database with the demo schema instead, set `PG_GUARD_TEST_ADMIN_URL` (owner) and `PG_GUARD_TEST_APP_URL` (the `pgguard_app` login). CI runs typecheck, build and the full test suite on Node 22 and 24. The library runs on Node 20+, but the test tooling (testcontainers) needs Node 22+.
 
 ## Credits
 
