@@ -1,0 +1,14 @@
+# pg-guard-sql policy for the demo shop database.
+schema: public
+allowedRelations:
+  - v_orders
+  - products
+descriptions:
+  v_orders: "The signed-in user's orders: id, created_at, product, quantity, total, note"
+  products: "Public product catalog: id, name, price"
+role: ai_reader            # SET LOCAL ROLE for every query (NOLOGIN, read-only, RLS applies)
+requiredSettings:
+  - app.user_id            # refuse to run unless the RLS user is set (fail closed)
+settings: {}               # set per deployment, e.g. PG_GUARD_SETTINGS='{"app.user_id":"alice"}'
+maxRows: 500
+timeoutMs: 3000
